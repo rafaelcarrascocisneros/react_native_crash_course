@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image } from 'react-native'
+import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useState } from 'react';
@@ -9,16 +9,35 @@ import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomButton from '../../components/CustomButton';
 
+import { createUser } from '../../lib/appwrite'
+
 const SignUp = () => {
   const [form, setForm] = useState({
     username: '',
     email: '',
     password: '',
   })
-  const [isSubmitting, setIsSubmiting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const submit = () => {
+  const submit = async () => {
+    if(!form.username || !form.password || !form.email){
+      Alert.alert('Error', 'Please fill in all the fields')
+    }
 
+    setIsSubmitting(true);
+
+    try {
+      const result = await createUser(form.username, form.email, form.password)
+
+      // set it to global state...
+
+      router.replace('/home')
+    } catch(error) {
+      Alert.alert('Error', error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
+    createUser();
   }
 
   return (
@@ -32,7 +51,7 @@ const SignUp = () => {
           <FormField 
             title="Username"
             value={form.username}
-            handleChangeText={(e) => setForm({...form, email: e})}
+            handleChangeText={(e) => setForm({...form, username: e})}
             otherStyles="mt-10"
           />
 
