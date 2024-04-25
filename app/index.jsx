@@ -7,7 +7,12 @@ import { Redirect, router } from 'expo-router';
 import CustomButton from '../components/CustomButton';
 import { images } from '../constants';
 
+import { useGlobalContext } from '../context/GlobalProvider';
+
 export default function App() {
+  const {isLoading, isLoggedIn} = useGlobalContext();
+
+  if(!isLoading && isLoggedIn) return <Redirect href="/home" />;
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView contenContainerStyle={{ height: '100%' }}>

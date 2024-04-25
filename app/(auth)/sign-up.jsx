@@ -2,7 +2,7 @@ import { View, Text, ScrollView, Image, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useState } from 'react';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 import { images } from '../../constants';
 
@@ -25,11 +25,10 @@ const SignUp = () => {
     }
 
     setIsSubmitting(true);
-
     try {
-      const result = await createUser(form.username, form.email, form.password)
-
-      // set it to global state...
+      const result = await createUser(form.email, form.password, form.username)
+      setUser(result);
+      setIsLogged(true);
 
       router.replace('/home')
     } catch(error) {
@@ -37,8 +36,7 @@ const SignUp = () => {
     } finally {
       setIsSubmitting(false)
     }
-    createUser();
-  }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
